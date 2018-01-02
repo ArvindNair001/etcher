@@ -38,6 +38,7 @@ DEV_FILES_REGEX=^\(tests\|scripts\)/
 # need to do a non-greedy match, which is why we're not using (.*)
 REQUIRE_REGEX=require\\\(\'\([-_/\.a-z0-9]+\)\'\\\)
 JS_OR_JSON_REGEX=\.js\(on\)?$
+HTML_REGEX=\.html$
 
 # Check all js files stored in the repo can require() the packages they need
 git ls-tree -r HEAD | while IFS='' read line; do
@@ -61,6 +62,9 @@ git ls-tree -r HEAD | while IFS='' read line; do
             if [[ "$localpath" =~ $JS_OR_JSON_REGEX ]] && [[ -f "$localpath" ]]; then
               requirement_found=1
             elif [[ -f "$localpath.js" ]] || [[ -f "$localpath/index.js" ]]; then
+              requirement_found=1
+            # Webpack HTML loader
+            elif [[ "$localpath" =~ $HTML_REGEX ]]; then
               requirement_found=1
             fi
           else
